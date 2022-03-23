@@ -9,5 +9,6 @@ router.post("/", employeeControllers.createNewEmployee)
 router.patch("/:id", employeeControllers.editEmployeeById)
 router.delete("/:id", employeeControllers.deleteEmployeeById)
 router.delete("/", employeeControllers.deleteAllEmployee)
+router.patch("/", employeeControllers.editAllEmployee)
 
 module.exports = router;
