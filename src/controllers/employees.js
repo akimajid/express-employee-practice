@@ -123,59 +123,52 @@ const employeeControllers = {
   },
   deleteAllEmployee: (req, res) => {
     const employeeId = req.query.id
-    const arr = employeeId.split(",")
-
-    for (let i = 0; i < arr.length; i++) {
-      const findIndex = employeeDB.findIndex((val) => {
-        return val.id == arr[i]
-      })
-
-      if (findIndex == -1) {
-        res.status.json({
-          message: "Employee not found"
-        })
-        return
-      } else {
-        employeeDB.splice(findIndex, 1)
-      }
-
-      res.status(200).json({
-        message: "Employee deleted!"
-      })
-    }
-  },
-  editAllEmployee: (req, res) => {
-    const employeeId = req.query.id
-    const editData = req.body
-    const arr = employeeId.split(",")
     
-    for (let i = 0; i < arr.length; i++) {
-      const findIndex =employeeDB.findIndex((val) => {
-        return val.id == arr[i]
+    employeeId.forEach(id => {
+      const findIndex = employeeDB.findIndex(val => {
+        return val.id == id
       })
 
       if (findIndex == -1) {
         res.status(404).json({
-          message: "Employee not found!"
+          message: "Employee not found"
         })
         return
-      } else if (editData.length == 1) {
-        employeeDB[findIndex] = {
-          ...employeeDB[findIndex],
-          ...editData[i]
-        }
-        return
-      } else {
-        employeeDB[findIndex] = {
-          ...employeeDB[findIndex],
-          ...editData
-        }
       }
-      
-      res.status(200).json({
-        message: "Employee edited"
+
+      employeeDB.splice(findIndex, 1)
+    })
+
+    res.status(200).json({
+      message: "Employee deleted"
+    })
+  },
+  editAllEmployee: (req, res) => {
+    const employeeId = req.query.id
+    const editEmployeeData = req.body
+
+    employeeId.forEach(id => {
+      const findIndex = employeeDB.findIndex(val => {
+        return val.id == id
       })
-    }
+
+      if (findIndex == -1) {
+        res.status(404).json({
+          message: "Employee no found"
+        })
+        return
+      }
+
+      employeeDB[findIndex] = {
+        ...employeeDB[findIndex],
+        ...editEmployeeData
+      }
+    })
+
+    res.status(200).json({
+      message: "Employee edited",
+      result: employeeDB[findIndex]
+    })
   }
 }
 
