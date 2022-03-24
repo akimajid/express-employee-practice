@@ -121,53 +121,44 @@ const employeeControllers = {
       message: "Deleted employee"
     })
   },
-  deleteAllEmployee: (req, res) => {
-    const employeeId = req.query.id
-    
-    employeeId.forEach(id => {
-      const findIndex = employeeDB.findIndex(val => {
-        return val.id == id
-      })
+  deleteMultipleEmployee: (req, res) => {
+    const employeeIds = req.query.ids
 
-      if (findIndex == -1) {
-        res.status(404).json({
-          message: "Employee not found"
-        })
-        return
-      }
+    employeeIds.forEach((employeeId) => {
+      const findIndex = employeeDB.findIndex((employee) => {
+        return employee.id == employeeId
+      })
 
       employeeDB.splice(findIndex, 1)
     })
-
+    
     res.status(200).json({
-      message: "Employee deleted"
-    })
+      message: "Deleted employee"
+    })  
   },
-  editAllEmployee: (req, res) => {
-    const employeeId = req.query.id
+  editMultipleEmployee: (req, res) => {
+    const employeeIds = req.query.id
     const editEmployeeData = req.body
 
-    employeeId.forEach(id => {
-      const findIndex = employeeDB.findIndex(val => {
-        return val.id == id
+    for (let i = 0; i < employeeIds.length; i++) {
+      const currentEmployeeId = employeeIds[i]
+
+      const findIndex = employeeDB.findIndex((employee) => {
+        return employee.id == currentEmployeeId
       })
 
       if (findIndex == -1) {
-        res.status(404).json({
-          message: "Employee no found"
-        })
-        return
+        continue
       }
 
       employeeDB[findIndex] = {
         ...employeeDB[findIndex],
         ...editEmployeeData
       }
-    })
+    }
 
     res.status(200).json({
-      message: "Employee edited",
-      result: employeeDB[findIndex]
+      message: "Employee edited"
     })
   }
 }
